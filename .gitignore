@@ -1,0 +1,21 @@
+# Secrets: never upload these
+.env
+.env.*
+!.env.example
+*.env
+secrets.json
+credentials.json
+*.pem
+*.key
+*.p12
+config.local.*
+*apikey*
+*api_key*
+*api-key*
+
+# System and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+node_modules/
