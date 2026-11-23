@@ -145,6 +145,11 @@
   #pBack{cursor:pointer;pointer-events:auto}
   #pImgBox{display:flex;align-items:center;justify-content:center}
   #pImgWrap{position:relative;line-height:0}
+  #pImg{filter:url(#boilImg)}                                   /* 1. the grainy edges wobble like the titles */
+  #pImgWrap.ouch{animation:shiver .55s ease}                     /* 2. a shiver every time someone gets hurt by it */
+  @keyframes shiver{0%,100%{translate:0 0;rotate:0deg}15%{translate:-10px 2px;rotate:-2.5deg}30%{translate:9px -3px;rotate:2.5deg}45%{translate:-7px 2px;rotate:-1.5deg}60%{translate:5px -1px;rotate:1deg}80%{translate:-2px 0;rotate:-.4deg}}
+  #pImgBox.drop{animation:drop 1.1s cubic-bezier(.3,0,.2,1) both}  /* 3. it falls in and bounces when the page opens */
+  @keyframes drop{0%{transform:translateY(-110vh) rotate(-8deg)}55%{transform:translateY(0) rotate(0)}68%{transform:translateY(-38px) rotate(2deg)}80%{transform:translateY(0) rotate(0)}90%{transform:translateY(-10px)}100%{transform:translateY(0)}}
   #pPl{position:absolute;inset:0;pointer-events:none;overflow:visible}
   #pPl img{position:absolute}
   #pImgBox img{display:block;pointer-events:none;transition:opacity .2s}
@@ -218,6 +223,7 @@
     <div class="a" id="edge"></div>
     <div class="a" id="band"></div>
     <svg class="a" id="tSvg"><defs><filter id="boil" x="-2%" y="-5%" width="104%" height="110%"><feTurbulence id="boilT" type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="1"/><feDisplacementMap in="SourceGraphic" scale="3.2"/><feGaussianBlur stdDeviation=".5"/></filter></defs><g filter="url(#boil)"><path id="tTxt"></path></g></svg>
+    <svg width="0" height="0" style="position:absolute"><filter id="boilImg" x="-3%" y="-3%" width="106%" height="106%"><feTurbulence id="boilIT" type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="1"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter></svg>
     <div id="tPath" style="display:none"></div>
     <div class="a num" id="pCircle"></div>
     <div class="a" id="pRank"></div>
@@ -275,7 +281,7 @@ const $ = id => document.getElementById(id);
 const tc = s => s.replace(/(^|\s)([a-z])/g, (m, a, b) => a + b.toUpperCase());
 const fmt = n => n.toLocaleString('en-US');
 setInterval(() => { const sd = 1 + Math.floor(Math.random() * 6), t = document.getElementById('boilT'), u = document.getElementById('boilST');
-  if (t && cur) t.setAttribute('seed', sd); if (u && fOn) u.setAttribute('seed', sd); }, 140);
+  if (t && cur) { t.setAttribute('seed', sd); $('boilIT').setAttribute('seed', 7 - sd); } if (u && fOn) u.setAttribute('seed', sd); }, 140);
 
 /* ---------- fonts: the designer's own fonts are used when installed ---------- */
 function hasFont(name) {
@@ -576,7 +582,7 @@ function render(o) {
   $('cYear').textContent = v25 >= 1 ? `In 2025, about 1 in ${Math.round(100 / v25)} home ER visits came from ${o.phrase}.` : `In 2025, ${o.phrase} caused ${v25.toFixed(2)}% of home ER visits.`;
   $('pYears').innerHTML = h;
   const pi = $('pImg'); pi.style.opacity = 0; pi.alt = o.title;
-  pi.onload = () => { fitImg(); pi.style.opacity = 1; drawPagePlasters(); }; pi.src = `img/${o.img}.webp`; if (pi.complete && pi.naturalWidth) pi.onload();
+  pi.onload = () => { fitImg(); pi.style.opacity = 1; drawPagePlasters(); const bx = $('pImgBox'); bx.classList.remove('drop'); void bx.offsetWidth; bx.classList.add('drop'); }; pi.src = `img/${o.img}.webp`; if (pi.complete && pi.naturalWidth) pi.onload();
   showStory(); layoutObj(); window.scrollTo(0, 0);
 }
 function layoutObj() {
