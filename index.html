@@ -582,7 +582,7 @@ function render(o) {
   $('cYear').textContent = v25 >= 1 ? `In 2025, about 1 in ${Math.round(100 / v25)} home ER visits came from ${o.phrase}.` : `In 2025, ${o.phrase} caused ${v25.toFixed(2)}% of home ER visits.`;
   $('pYears').innerHTML = h;
   const pi = $('pImg'); pi.style.opacity = 0; pi.alt = o.title;
-  pi.onload = () => { fitImg(); pi.style.opacity = 1; drawPagePlasters(); const bx = $('pImgBox'); bx.classList.remove('drop'); void bx.offsetWidth; bx.classList.add('drop'); }; pi.src = `img/${o.img}.webp`; if (pi.complete && pi.naturalWidth) pi.onload();
+  pi.onload = () => { fitImg(); pi.style.opacity = 1; drawPagePlasters(); }; pi.src = `img/${o.img}.webp`; if (pi.complete && pi.naturalWidth) pi.onload();
   showStory(); layoutObj(); window.scrollTo(0, 0);
 }
 function layoutObj() {
